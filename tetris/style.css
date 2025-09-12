@@ -1,0 +1,371 @@
+:root{
+  --bg:#06060a;
+  --panel:#071018;
+  --neon-1:#00ffd5;
+  --neon-2:#ff2d95;
+  --neon-3:#7a5cff;
+  --muted:#889;
+  --block-1:#00ffd5; /* Cores dos blocos de fundo */
+  --block-2:#ff2d95;
+  --block-3:#7a5cff;
+  --block-4:#ffd54d;
+  --block-5:#6aff9c;
+  --block-6:#4dd0ff;
+}
+html,body{height:100%;margin:0;font-family:Inter,system-ui,monospace;background:linear-gradient(180deg,var(--bg),#000);}
+
+/* Nova estrutura Flexbox para o wrap principal */
+.wrap{
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 28px;
+  box-sizing: border-box;
+}
+
+/* Nova estrutura Flexbox para a UI */
+.ui {
+  display: flex;
+  flex-direction: row; /* Padrão: lado a lado */
+  flex-wrap: wrap; /* Permite quebrar linha em telas menores */
+  gap: 20px;
+  align-items: flex-start;
+  backdrop-filter: blur(6px);
+  position: relative;
+  z-index: 10;
+  justify-content: center; /* Centraliza itens em telas menores */
+}
+
+/* Nova estrutura Flexbox para a área principal do jogo */
+.main-game-area {
+  display: flex;
+  flex-direction: row; /* Padrão: lado a lado */
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: flex-start;
+  justify-content: center;
+  background: transparent;
+}
+
+/* ------------------- CÓDIGO DO BACKGROUND ANIMADO ------------------- */
+.tetris-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
+  background-color: var(--bg);
+}
+
+.tetris-background::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  box-shadow:
+    -100px -100px 0 0 var(--block-1), 150px -200px 0 0 var(--block-2),
+    300px -50px 0 0 var(--block-3), 450px -150px 0 0 var(--block-4),
+    600px -300px 0 0 var(--block-5), 750px -100px 0 0 var(--block-6),
+    900px -250px 0 0 var(--block-1), -50px -400px 0 0 var(--block-2),
+    200px -350px 0 0 var(--block-3), 400px -500px 0 0 var(--block-4),
+    550px -250px 0 0 var(--block-5), 700px -450px 0 0 var(--block-6),
+    850px -150px 0 0 var(--block-1), -200px -300px 0 0 var(--block-2),
+    -350px -100px 0 0 var(--block-3), -400px -450px 0 0 var(--block-4),
+    -500px -200px 0 0 var(--block-5), -600px -350px 0 0 var(--block-6),
+    -700px -100px 0 0 var(--block-1), -800px -400px 0 0 var(--block-2);
+  
+  animation: fall-background 40s linear infinite;
+  animation-delay: 0s;
+  width: 40px;
+  height: 40px;
+  opacity: 0.1;
+  border-radius: 4px;
+}
+
+@keyframes fall-background {
+  0% { transform: translateY(-100vh) rotate(0deg); opacity: 0.1; }
+  100% { transform: translateY(100vh) rotate(360deg); opacity: 0.05; }
+}
+/* ------------------- FIM DO CÓDIGO DO BACKGROUND ANIMADO ------------------- */
+
+/* Container do Canvas e Overlays */
+.game-container {
+    position: relative;
+    width: 360px;
+    height: 720px;
+}
+
+canvas#board{
+  width: 100%;
+  height: 100%;
+  border-radius:8px;
+  box-shadow: 0 0 40px rgba(0,255,213,0.08), inset 0 0 30px rgba(122,92,255,0.02);
+  background: radial-gradient(1200px 800px at 20% 10%, rgba(122,92,255,0.035), transparent 5%),
+              radial-gradient(900px 600px at 90% 90%, rgba(0,255,213,0.02), transparent 5%),
+              linear-gradient(180deg,#05060b,#0b0711);
+  border: 3px solid rgba(0,255,213,0.12);
+}
+
+.panel {
+  width: 240px; padding:16px; border-radius:10px;
+  background: linear-gradient(180deg, rgba(10,10,12,0.6), rgba(8,8,12,0.45));
+  box-shadow: 0 6px 30px rgba(0,0,0,0.6), 0 0 18px rgba(122,92,255,0.06);
+  border: 1px solid rgba(255,255,255,0.03);
+  color: #dfe;
+}
+
+/* Nova classe para o título do jogo */
+.pixel-font {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 16px;
+    letter-spacing: 1px;
+    color: var(--neon-1);
+    text-shadow: 0 0 10px rgba(0,255,213,0.12);
+    margin: 0 0 10px 0;
+    text-align: center;
+}
+
+h1{color:var(--neon-1);margin:0 0 10px 0;font-size:16px;letter-spacing:1px;text-shadow:0 0 10px rgba(0,255,213,0.12);}
+.controls{display:flex;flex-direction:column;gap:8px;}
+button { padding:8px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#dff;cursor:pointer; }
+button.primary { background:linear-gradient(90deg,var(--neon-1),var(--neon-3));color:#001; font-weight:700; box-shadow:0 6px 20px rgba(0,255,213,0.06); }
+.stat { display:flex;justify-content:space-between; padding:8px 10px;border-radius:6px;background:rgba(255,255,255,0.02); margin-top:10px;}
+.nextBox { width:120px;height:120px;margin:12px auto;border-radius:8px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));display:flex;align-items:center;justify-content:center;position:relative;overflow:visible;}
+canvas#next{ width:120px;height:120px; background:transparent;}
+.powerup-row{display:flex;gap:8px;margin-top:8px;}
+.pu { flex:1;padding:8px;border-radius:6px;text-align:center;background:rgba(255,255,255,0.02); }
+.label{color:var(--muted);font-size:12px;margin-bottom:6px;}
+.hint{font-size:12px;color:rgba(200,255,230,0.6);margin-top:8px;}
+.floatingScore{
+  position:absolute; pointer-events:none; font-weight:700; color:var(--neon-2);
+  text-shadow:0 0 10px rgba(255,45,149,0.3);
+}
+/* Estilos para o rodapé e o link */
+.footer{
+    margin-top:12px;
+    font-size:12px;
+    color:rgba(200,255,230,0.4);
+    text-align: center;
+}
+.footer a {
+    color: var(--neon-1);
+    text-decoration: none;
+    text-shadow: 0 0 8px var(--neon-1), 0 0 12px var(--neon-1);
+    transition: color 0.3s ease;
+}
+.footer a:hover {
+    color: var(--neon-3);
+    text-shadow: 0 0 8px var(--neon-3), 0 0 12px var(--neon-3);
+}
+
+/* tiny responsive */
+@media (max-width:760px){ .wrap{padding:12px} canvas#board{width:300px;height:600px} .panel{width:200px} canvas#next{width:100px;height:100px} .nextBox{width:100px;height:100px} }
+
+/* ------------------- ESTILOS PARA AS INFORMAÇÕES DOS POWER-UPS ------------------- */
+.powerup-info {
+  width: 280px; /* Largura ajustada */
+  padding: 20px; /* Preenchimento aumentado */
+  border-radius: 8px;
+  background: linear-gradient(180deg, rgba(10,10,12,0.6), rgba(8,8,12,0.45));
+  box-shadow: 0 6px 30px rgba(0,0,0,0.6), 0 0 18px rgba(122,92,255,0.06);
+  border: 1px solid rgba(255,255,255,0.03);
+  color: #dfe;
+}
+
+.powerup-info h3 {
+  color: var(--neon-2);
+  text-shadow: 0 0 8px var(--neon-2);
+  font-size: 18px; /* Fonte do título aumentada */
+  margin: 0 0 12px 0;
+  text-align: center;
+}
+
+.powerup-info p {
+  font-size: 14px; /* Fonte do parágrafo aumentada */
+  color: rgba(200,255,230,0.7);
+  line-height: 1.6;
+  margin: 0;
+  padding-bottom: 8px;
+}
+
+/* Estilos para o botão de Pause */
+button#pause {
+    background: #4CAF50;
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+}
+
+button#pause:hover {
+    background: #45a049;
+    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.6);
+}
+
+/* Estilos para a tela de Game Over */
+.game-message {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  z-index: 20;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+.game-message.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.game-message .message-content {
+  background: linear-gradient(180deg, rgba(10,10,12,0.6), rgba(8,8,12,0.45));
+  padding: 30px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  box-shadow: 0 0 20px rgba(0, 255, 213, 0.1), 0 0 40px rgba(122, 92, 255, 0.1);
+}
+
+.game-message h1 {
+  font-size: 32px;
+  color: #ff0000;
+  text-shadow: 0 0 12px #ff0000;
+  margin-bottom: 10px;
+}
+
+.game-message p {
+  color: #fff;
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.score-display {
+  font-size: 28px;
+  color: var(--neon-1);
+  text-shadow: 0 0 10px var(--neon-1);
+}
+
+.button-row {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.button-row button {
+  padding: 10px 20px;
+  font-family: 'Roboto Mono', monospace;
+  font-weight: 700;
+  font-size: 14px;
+  text-transform: uppercase;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  background-color: var(--neon-3);
+  color: #001;
+  box-shadow: 0 4px 15px rgba(122, 92, 255, 0.4);
+  transition: transform 0.2s, box-shadow 0.3s;
+}
+
+.button-row button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(122, 92, 255, 0.6);
+}
+
+.button-row button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 10px rgba(122, 92, 255, 0.3);
+}
+
+#closeBtn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  box-shadow: none;
+}
+
+/* ------------------- Tela de Pause ------------------- */
+.game-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    z-index: 15;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+.game-overlay.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.pause-icon {
+    font-size: 80px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.8);
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.1); opacity: 1; }
+    100% { transform: scale(1); opacity: 0.8; }
+}
+
+/* ------------------- MEDIA QUERIES (RESPONSIVIDADE) ------------------- */
+/* Para telas com largura máxima de 768px (tablets e celulares) */
+@media (max-width: 768px) {
+  .wrap {
+    padding: 12px;
+  }
+  
+  .ui {
+    flex-direction: column; /* Empilha os elementos verticalmente */
+    align-items: center; /* Centraliza verticalmente */
+  }
+
+  .main-game-area {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  /* Ajusta a largura e altura do canvas para se adequar a telas menores */
+  .game-container {
+    width: 300px;
+    height: 600px;
+  }
+
+  .panel {
+    width: 300px; /* O painel ocupa a mesma largura do canvas */
+    order: 3; /* Coloca o painel por último */
+  }
+  
+  .powerup-info {
+    width: 300px; /* O contêiner de info de power-up ocupa a mesma largura do canvas */
+    order: 1; /* Coloca as informações de power-ups no topo */
+  }
+
+  /* Esconde o painel de next e info em telas pequenas se precisar de mais espaço */
+  .nextBox, .hint, .powerup-row, .label {
+      display: none;
+  }
+}
