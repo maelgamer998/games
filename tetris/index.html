@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Tetris Cyber Mod</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+    </head>
+
+<body>
+
+    <div class="tetris-background"></div>
+
+    <div class="wrap">
+        <div class="ui">
+            <div class="main-game-area">
+                <div class="powerup-info">
+                    <h3>Peças Especiais</h3>
+                    <p>
+                        <span style="color: #ff0000; text-shadow: 0 0 5px #ff0000;">•</span>
+                        Bomba (vermelha): Limpa os blocos em uma área.
+                    </p>
+                    <p>
+                        <span style="color: #0000ff; text-shadow: 0 0 5px #0000ff;">•</span>
+                        Laser (azul): Destrói linhas aleatórias.
+                    </p>
+                    <p>
+                        <span style="color: #fff; text-shadow: 0 0 5px #fff;">•</span>
+                        Lento (branca): Diminui a velocidade do jogo.
+                    </p>
+                </div>
+
+                <div class="game-container">
+                    <canvas id="board" width="360" height="720"></canvas>
+
+                    <div id="pauseScreen" class="game-overlay">
+                        <div class="pause-icon">||</div>
+                    </div>
+
+                    <div id="gameOverScreen" class="game-message">
+                        <div class="message-content">
+                            <h1>GAME OVER</h1>
+                            <p>Sua Pontuação Final:</p>
+                            <div id="finalScore" class="score-display">0</div>
+                            <div class="button-row">
+                                <button id="restartBtn">RECOMEÇAR</button>
+                                <button id="closeBtn">FECHAR</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h1 class="pixel-font">NEON TETRIS</h1>
+                    <h1 class="pixel-font">CYBER MOD</h1>
+
+                    <div class="controls">
+                        <button id="start" class="primary">Começar</button>
+                        <button id="pause">Pause</button>
+                        <button id="modeClock">Modo Ataque (60s)</button>
+                        <div class="stat">
+                            <div>Score</div>
+                            <div id="uiScore">0</div>
+                        </div>
+                        <div class="stat">
+                            <div>Nível</div>
+                            <div id="uiLevel">1</div>
+                        </div>
+                        <div class="stat">
+                            <div>Combo</div>
+                            <div id="uiCombo">x1</div>
+                        </div>
+
+                        <div class="nextBox">
+                            <canvas id="next" width="120" height="120"></canvas>
+                        </div>
+
+                        <div class="label">Power-ups (teclas 1,2,3)</div>
+                        <div class="powerup-row">
+                            <div id="pu1" class="pu">1 • Bomba<br><small id="pu1c">—</small></div>
+                            <div id="pu2" class="pu">2 • Laser<br><small id="pu2c">—</small></div>
+                            <div id="pu3" class="pu">3 • Slow<br><small id="pu3c">—</small></div>
+                        </div>
+                        <div class="hint">Controles: ← → (mover) • ↑ (girar) • ↓ (acelerar) • Space (queda instantânea)</div>
+
+                        <div class="footer">Criado por <a href="https://github.com/maelgamer998" target="_blank">MAEL</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="floatingLayer" style="position:fixed;left:0;top:0;pointer-events:none;width:100%;height:100%;"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
