@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Snake Clássico</title>
+    <title>Snake Clássico - Suave</title>
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-color: #2c3e50;
             --container-bg: #34495e;
-            --canvas-bg: #1c2833;
-            --snake-head: #2ecc71;
-            --snake-body: #27ae60;
+            --canvas-bg: #101010; /* Fundo do canvas preto */
+            --grid-line-color: #333; /* Linhas da grade cinza escuro */
+            --snake-head-color: #ffffff; /* Cabeça branca */
             --apple-color: #e74c3c;
             --super-coin-color: #f1c40f;
             --text-color: #ecf0f1;
@@ -125,7 +125,7 @@
 <body>
 
     <div class="game-container">
-        <h1>SNAKE CLÁSSICO</h1>
+        <h1>SNAKE CLÁSSICO - SUAVE</h1>
         
         <div id="score-board">
             <span>Pontos: <span id="score">0</span></span>
@@ -151,17 +151,16 @@
 
 <script>
     (function() {
-        // Configurações do jogo
         const canvas = document.getElementById('snakeCanvas');
         const ctx = canvas.getContext('2d');
-        const tileSize = 20;
-        const gridSize = canvas.width / tileSize;
+        const tileSize = 20; // Tamanho de cada célula
+        const gridSize = canvas.width / tileSize; // Número de células por lado
 
         let snake = [{ x: 10, y: 10 }];
         let food = {};
         let direction = 'right';
         let score = 0;
-        let speed = 150;
+        let speed = 150; // Velocidade inicial do jogo em ms
         let gameLoop;
         let isPaused = false;
         let bestScore = localStorage.getItem('snakeBestScore') || 0;
@@ -204,18 +203,56 @@
         }
 
         function draw() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.clearRect(0, 0, canvas.width, canvas.height); // Limpa o canvas
+
+            // Desenhar o fundo com grades
+            ctx.fillStyle = 'var(--canvas-bg)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.strokeStyle = 'var(--grid-line-color)';
+            ctx.lineWidth = 0.5;
+
+            for (let i = 0; i <= gridSize; i++) {
+                ctx.beginPath();
+                ctx.moveTo(i * tileSize, 0);
+                ctx.lineTo(i * tileSize, canvas.height);
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.moveTo(0, i * tileSize);
+                ctx.lineTo(canvas.width, i * tileSize);
+                ctx.stroke();
+            }
 
             // Desenhar a comida (maçã vermelha)
             ctx.fillStyle = 'var(--apple-color)';
-            ctx.fillRect(food.x * tileSize, food.y * tileSize, tileSize, tileSize);
+            ctx.beginPath();
+            ctx.arc(food.x * tileSize + tileSize / 2, food.y * tileSize + tileSize / 2, tileSize / 2 - 2, 0, Math.PI * 2);
+            ctx.fill();
 
-            // Desenhar a cobra (quadrados verdes)
+            // Desenhar a cobra
             snake.forEach((segment, index) => {
-                ctx.fillStyle = (index === 0) ? 'var(--snake-head)' : 'var(--snake-body)';
-                ctx.fillRect(segment.x * tileSize, segment.y * tileSize, tileSize, tileSize);
-                ctx.strokeStyle = '#000';
-                ctx.strokeRect(segment.x * tileSize, segment.y * tileSize, tileSize, tileSize);
+                if (index === 0) { // Cabeça da cobra
+                    ctx.fillStyle = 'var(--snake-head-color)';
+                    ctx.shadowColor = 'var(--snake-head-color)'; // Brilho
+                    ctx.shadowBlur = 10; // Intensidade do brilho
+                    ctx.fillRect(segment.x * tileSize + 1, segment.y * tileSize + 1, tileSize - 2, tileSize - 2);
+                    ctx.shadowBlur = 0; // Resetar o brilho para não afetar outros elementos
+                } else { // Corpo da cobra com gradiente
+                    const gradientStartColor = '#2ecc71'; // Verde
+                    const gradientEndColor = '#808080'; // Cinza
+
+                    // Calcula a cor baseada na posição do segmento na cobra
+                    const alpha = index / snake.length; // 0 para perto da cabeça, 1 para a cauda
+                    const r = Math.round(parseInt(gradientStartColor.substring(1,3), 16) * (1 - alpha) + parseInt(gradientEndColor.substring(1,3), 16) * alpha);
+                    const g = Math.round(parseInt(gradientStartColor.substring(3,5), 16) * (1 - alpha) + parseInt(gradientEndColor.substring(3,5), 16) * alpha);
+                    const b = Math.round(parseInt(gradientStartColor.substring(5,7), 16) * (1 - alpha) + parseInt(gradientEndColor.substring(5,7), 16) * alpha);
+                    ctx.fillStyle = `rgb(${r},${g},${b})`;
+                    
+                    ctx.fillRect(segment.x * tileSize + 1, segment.y * tileSize + 1, tileSize - 2, tileSize - 2);
+                }
+                ctx.strokeStyle = '#000'; // Contorno para os segmentos
+                ctx.lineWidth = 1;
+                ctx.strokeRect(segment.x * tileSize + 1, segment.y * tileSize + 1, tileSize - 2, tileSize - 2);
             });
 
             // Desenhar o bônus (quadrado amarelo)
@@ -224,9 +261,10 @@
                     bonus = null;
                 } else {
                     ctx.fillStyle = 'var(--super-coin-color)';
-                    ctx.fillRect(bonus.x * tileSize, bonus.y * tileSize, tileSize, tileSize);
+                    ctx.fillRect(bonus.x * tileSize + 1, bonus.y * tileSize + 1, tileSize - 2, tileSize - 2);
                     ctx.strokeStyle = 'rgba(0,0,0,0.5)';
-                    ctx.strokeRect(bonus.x * tileSize, bonus.y * tileSize, tileSize, tileSize);
+                    ctx.lineWidth = 1;
+                    ctx.strokeRect(bonus.x * tileSize + 1, bonus.y * tileSize + 1, tileSize - 2, tileSize - 2);
                 }
             }
 
@@ -328,6 +366,7 @@
 
         function startGame() {
             gameLoop = setInterval(update, speed);
+            // Inicia o bônus com um intervalo
             setInterval(createBonus, BONUS_INTERVAL);
         }
         
