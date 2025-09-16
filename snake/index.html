@@ -139,8 +139,34 @@
     </style>
 </head>
 <body>
-    <div class="score">0</div>
-    <div class="stage"></div>
+<!-- Menu de Pausa -->
+<div id="pauseMenu" style="display:none; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+     background:#111; padding:20px; border-radius:10px; text-align:center; color:#fff; z-index:10;">
+  <h2>Menu de Pausa</h2>
+  
+  <label>Modo de Jogo:</label><br>
+  <select id="gameMode">
+    <option value="normal">Normal</option>
+    <option value="arcade">Arcade (1 min)</option>
+  </select><br><br>
+
+  <label>Dificuldade:</label><br>
+  <select id="difficulty">
+    <option value="easy">Easy</option>
+    <option value="normal" selected>Normal</option>
+    <option value="hard">Hard</option>
+  </select><br><br>
+
+  <label>Cor da Cobra:</label><br>
+  <input type="color" id="snakeColor" value="#ffffff"><br><br>
+
+  <button id="resumeBtn">Retomar</button>
+</div>
+
+<!-- Sons -->
+<audio id="eatSound" src="https://actions.google.com/sounds/v1/cartoon/pop.ogg"></audio>
+<audio id="gameOverSound" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"></audio>
+
 
     <script>
         /*================================================
@@ -677,6 +703,76 @@
                 this.dir = 'w';
             }
             }
+// Referências do menu
+const pauseMenu = document.getElementById("pauseMenu");
+const gameModeSelect = document.getElementById("gameMode");
+const difficultySelect = document.getElementById("difficulty");
+const snakeColorInput = document.getElementById("snakeColor");
+const resumeBtn = document.getElementById("resumeBtn");
+
+const eatSound = document.getElementById("eatSound");
+const gameOverSound = document.getElementById("gameOverSound");
+
+let paused = false;
+let gameMode = "normal";
+let difficulty = "normal";
+let snakeColor = "#ffffff";
+let arcadeTimer;
+
+// Abrir/fechar menu com ESC
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") {
+    paused = !paused;
+    pauseMenu.style.display = paused ? "block" : "none";
+  }
+});
+
+// Retomar jogo
+resumeBtn.addEventListener("click", () => {
+  gameMode = gameModeSelect.value;
+  difficulty = difficultySelect.value;
+  snakeColor = snakeColorInput.value;
+
+  // Ajusta dificuldade
+  if (difficulty === "easy") g.currentState().snake.updateTickMax = 15;
+  if (difficulty === "normal") g.currentState().snake.updateTickMax = 10;
+  if (difficulty === "hard") g.currentState().snake.updateTickMax = 5;
+
+  // Arcade Mode: 1 min
+  if (gameMode === "arcade") {
+    clearTimeout(arcadeTimer);
+    arcadeTimer = setTimeout(() => {
+      alert("⏰ Tempo esgotado! Pontuação: " + g.currentState().score);
+      gameOverSound.play();
+      g.setState("play");
+    }, 60000);
+  }
+
+  pauseMenu.style.display = "none";
+  paused = false;
+});
+
+// Pausar a atualização do jogo se "paused"
+const oldUpdate = g.Snake.prototype.update;
+g.Snake.prototype.update = function() {
+  if (!paused) oldUpdate.call(this);
+};
+
+// Altera cor da cobra
+const oldRender = g.SnakeTile.prototype.render;
+g.SnakeTile.prototype.render = function(i) {
+  this.elem.style.backgroundColor = (i === 0) ? snakeColor : snakeColor;
+  oldRender.call(this, i);
+};
+
+// Sons: comer e game over
+const oldEat = g.Snake.prototype.update;
+g.Snake.prototype.update = function() {
+  const prevScore = this.parentState.score;
+  oldEat.call(this);
+  if (this.parentState.score > prevScore) eatSound.play();
+  if (this.deathFlag) gameOverSound.play();
+};
 
             this.parentState.keys.up = 0;
             this.parentState.keys.down = 0;
