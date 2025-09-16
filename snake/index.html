@@ -139,33 +139,33 @@
     </style>
 </head>
 <body>
-<!-- Menu de Pausa -->
-<div id="pauseMenu" style="display:none; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-     background:#111; padding:20px; border-radius:10px; text-align:center; color:#fff; z-index:10;">
-  <h2>Menu de Pausa</h2>
-  
-  <label>Modo de Jogo:</label><br>
-  <select id="gameMode">
-    <option value="normal">Normal</option>
-    <option value="arcade">Arcade (1 min)</option>
-  </select><br><br>
+  <div id="game"></div>
 
-  <label>Dificuldade:</label><br>
-  <select id="difficulty">
-    <option value="easy">Easy</option>
-    <option value="normal" selected>Normal</option>
-    <option value="hard">Hard</option>
-  </select><br><br>
+  <!-- Menu de pausa -->
+  <div id="pauseMenu">
+    <h2>Menu</h2>
+    <label>Modo de jogo:</label>
+    <select id="gameMode">
+      <option value="normal">Normal</option>
+      <option value="arcade">Arcade (1 min)</option>
+    </select><br>
 
-  <label>Cor da Cobra:</label><br>
-  <input type="color" id="snakeColor" value="#ffffff"><br><br>
+    <label>Dificuldade:</label>
+    <select id="difficulty">
+      <option value="easy">Fácil</option>
+      <option value="normal" selected>Normal</option>
+      <option value="hard">Difícil</option>
+    </select><br>
 
-  <button id="resumeBtn">Retomar</button>
-</div>
+    <label>Cor da Cobra:</label>
+    <input type="color" id="snakeColor" value="#00ff00"><br>
 
-<!-- Sons -->
-<audio id="eatSound" src="https://actions.google.com/sounds/v1/cartoon/pop.ogg"></audio>
-<audio id="gameOverSound" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"></audio>
+    <button id="resumeBtn">Iniciar / Continuar</button>
+  </div>
+
+  <!-- Sons -->
+  <audio id="eatSound" src="eat.mp3"></audio>
+  <audio id="gameOverSound" src="gameover.mp3"></audio>
 
 
     <script>
