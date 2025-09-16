@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo de Adivinhar o Número</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        h1 {
+            color: #4CAF50;
+        }
+        p {
+            font-size: 1.1em;
+        }
+        input[type="number"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 80px;
+            text-align: center;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .feedback {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Jogo de Adivinhar o Número</h1>
+        <p>Estou pensando em um número entre 1 e 100. Você tem 10 tentativas para adivinhar.</p>
+        
+        <p>
+            Digite seu palpite:
+            <input type="number" id="palpite" min="1" max="100">
+            <button id="enviarPalpite">Adivinhar</button>
+        </p>
+        
+        <div class="feedback" id="feedback"></div>
+        <p id="tentativas">Tentativas restantes: 10</p>
+        
+        <button id="reiniciar" style="display: none;">Jogar Novamente</button>
+    </div>
+
+    <script>
+        // Lógica do jogo com JavaScript
+        let numeroAleatorio = Math.floor(Math.random() * 100) + 1;
+        let numTentativas = 10;
+        const inputPalpite = document.getElementById('palpite');
+        const enviarBtn = document.getElementById('enviarPalpite');
+        const feedback = document.getElementById('feedback');
+        const tentativasRestantes = document.getElementById('tentativas');
+        const reiniciarBtn = document.getElementById('reiniciar');
+
+        function verificarPalpite() {
+            const palpiteUsuario = Number(inputPalpite.value);
+            
+            if (numTentativas > 0) {
+                numTentativas--;
+                tentativasRestantes.textContent = `Tentativas restantes: ${numTentativas}`;
+                
+                if (palpiteUsuario === numeroAleatorio) {
+                    feedback.textContent = `🎉 Parabéns! Você acertou! O número era ${numeroAleatorio}.`;
+                    feedback.style.color = 'green';
+                    fimDeJogo();
+                } else if (palpiteUsuario < numeroAleatorio) {
+                    feedback.textContent = 'Seu palpite está muito baixo!';
+                    feedback.style.color = 'red';
+                } else {
+                    feedback.textContent = 'Seu palpite está muito alto!';
+                    feedback.style.color = 'red';
+                }
+
+                if (numTentativas === 0 && palpiteUsuario !== numeroAleatorio) {
+                    feedback.textContent = `😢 Fim de jogo! O número era ${numeroAleatorio}.`;
+                    feedback.style.color = 'black';
+                    fimDeJogo();
+                }
+            }
+            inputPalpite.value = '';
+            inputPalpite.focus();
+        }
+
+        function fimDeJogo() {
+            inputPalpite.disabled = true;
+            enviarBtn.disabled = true;
+            reiniciarBtn.style.display = 'inline-block';
+        }
+
+        function reiniciarJogo() {
+            numTentativas = 10;
+            numeroAleatorio = Math.floor(Math.random() * 100) + 1;
+            feedback.textContent = '';
+            tentativasRestantes.textContent = `Tentativas restantes: 10`;
+            inputPalpite.value = '';
+            inputPalpite.disabled = false;
+            enviarBtn.disabled = false;
+            reiniciarBtn.style.display = 'none';
+        }
+
+        enviarBtn.addEventListener('click', verificarPalpite);
+        reiniciarBtn.addEventListener('click', reiniciarJogo);
+    </script>
+
+</body>
+</html>
