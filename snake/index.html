@@ -1,163 +1,133 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Snakely</title>
-    
-    <style>
-        /*================================================
-        General
-        ================================================*/
-        * {
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Snakely</title>
 
-        html, body {
-            background-color: #000;
-            height: 100%;
-        }
+  <style>
+    /*================================================
+    General
+    ================================================*/
+    * { box-sizing: border-box; }
 
-        body {
-            background: #222;
-            background: radial-gradient(#333, #111);
-            background-position: center center;
-            background-repeat: no-repeat;
-            background-size: cover;
-            color: #fff;
-            font: 100%/1.5 sans-serif;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-        }
-        
-        /*================================================
-        Score
-        ================================================*/
-        .score {
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 16px;
-            font-weight: bold;
-            padding-top: 5px;
-            text-align: center;
-            position: absolute;
-            top: 20px;
-            z-index: 3;
-        }
+    html, body {
+      height: 100%;
+      margin: 0;
+      font-family: sans-serif;
+      overflow: hidden;
+      background: radial-gradient(#333, #111);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+    }
 
-        /*================================================
-        Stage
-        ================================================*/
-        .stage {
-            bottom: 0;
-            left: 0;
-            margin: auto;
-            position: absolute;
-            right: 0;
-            top: 0;
-            z-index: 2;
-        }
+    /*================================================
+    Score
+    ================================================*/
+    .score {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-weight: bold;
+      font-size: 18px;
+      color: rgba(255, 255, 255, 0.7);
+      z-index: 10;
+    }
 
-        /*================================================
-        Tiles
-        ================================================*/
-        .tile {
-            background: rgba(0, 0, 0, 0.15);
-            position: absolute;
-            transition-property: background, box-shadow, opacity, transform;
-            transform: translateZ(0);
-            transition-duration: 3000ms;
-        }
+    /*================================================
+    Stage
+    ================================================*/
+    .stage {
+      position: relative;
+      z-index: 1;
+    }
 
-        .tile:before {
-            bottom: 0;
-            content: '';
-            height: 0;
-            left: 0;
-            margin: auto;
-            opacity: 0;
-            position: absolute;
-            right: 0;
-            top: 0;
-            width: 0;
-            transition: opacity 300ms;
-        }
+    /*================================================
+    Tiles
+    ================================================*/
+    .tile {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.1);
+      transition: background 0.3s, box-shadow 0.3s, transform 0.3s, opacity 0.3s;
+      transform: translateZ(0);
+    }
 
-        .tile.path:before {
-            opacity: 1;
-        }
+    .tile.pressed {
+      background: rgba(255, 255, 255, 0.3);
+      box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.5);
+    }
 
-        .tile.up:before {
-            border-bottom: 4px inset rgba(255, 255, 255, 0.15);
-            border-left: 4px solid transparent;
-            border-right: 4px solid transparent;
-        }
+    /*================================================
+    Pause Menu
+    ================================================*/
+    #pauseMenu {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.9);
+      border: 2px solid #fff;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      display: none;
+      z-index: 20;
+    }
 
-        .tile.down:before {
-            border-top: 4px inset rgba(255, 255, 255, 0.15);
-            border-left: 4px solid transparent;
-            border-right: 4px solid transparent;
-        }
+    #pauseMenu h2 {
+      margin-top: 0;
+      margin-bottom: 15px;
+    }
 
-        .tile.left:before { 
-            border-right: 4px inset rgba(255, 255, 255, 0.15);
-            border-top: 4px solid transparent;
-            border-bottom: 4px solid transparent;
-        }
+    #pauseMenu select, #pauseMenu input, #pauseMenu button {
+      margin: 5px 0;
+      padding: 5px 10px;
+      font-size: 16px;
+    }
 
-        .tile.right:before { 
-            border-left: 4px inset rgba(255, 255, 255, 0.15);
-            border-top: 4px solid transparent;
-            border-bottom: 4px solid transparent;
-        }
+    #pauseMenu button {
+      cursor: pointer;
+      background: #00ff00;
+      border: none;
+      border-radius: 5px;
+      color: #000;
+      font-weight: bold;
+    }
 
-        @media (max-width: 900px), (max-height: 900px) {
-            .tile.up:before,
-            .tile.down:before,
-            .tile.left:before,
-            .tile.right:before {
-                border-width: 3px;
-            }
-        }
-
-        @media (max-width: 500px), (max-height: 500px) {
-            .tile.up:before,
-            .tile.down:before,
-            .tile.left:before,
-            .tile.right:before {
-                border-width: 2px;
-            }
-        }
-
-        .tile.pressed {
-            background: rgba(0, 0, 0, 0.3);
-            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.6);
-            transition-duration: 0ms;
-        }
-    </style>
+    #pauseMenu button:hover {
+      background: #0f0;
+    }
+  </style>
 </head>
 <body>
-  <div id="game"></div>
+
+  <!-- Score -->
+  <div class="score">0</div>
+
+  <!-- Stage -->
+  <div class="stage"></div>
 
   <!-- Menu de pausa -->
   <div id="pauseMenu">
     <h2>Menu</h2>
-    <label>Modo de jogo:</label>
+
+    <label for="gameMode">Modo de jogo:</label><br>
     <select id="gameMode">
       <option value="normal">Normal</option>
       <option value="arcade">Arcade (1 min)</option>
     </select><br>
 
-    <label>Dificuldade:</label>
+    <label for="difficulty">Dificuldade:</label><br>
     <select id="difficulty">
       <option value="easy">Fácil</option>
       <option value="normal" selected>Normal</option>
       <option value="hard">Difícil</option>
     </select><br>
 
-    <label>Cor da Cobra:</label>
+    <label for="snakeColor">Cor da Cobra:</label><br>
     <input type="color" id="snakeColor" value="#00ff00"><br>
 
     <button id="resumeBtn">Iniciar / Continuar</button>
@@ -166,9 +136,6 @@
   <!-- Sons -->
   <audio id="eatSound" src="eat.mp3"></audio>
   <audio id="gameOverSound" src="gameover.mp3"></audio>
-
-
-    <script>
 <script>
 /*================================================
  Polyfill
