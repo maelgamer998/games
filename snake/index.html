@@ -151,10 +151,6 @@
 
 <script>
     (function() {
-        // Sons
-        const eatSound = new Audio('https://www.soundboard.com/media/165500');
-        const gameOverSound = new Audio('https://www.soundboard.com/media/165516');
-        
         // Configurações do jogo
         const canvas = document.getElementById('snakeCanvas');
         const ctx = canvas.getContext('2d');
@@ -210,11 +206,11 @@
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Desenhar a comida
+            // Desenhar a comida (maçã vermelha)
             ctx.fillStyle = 'var(--apple-color)';
             ctx.fillRect(food.x * tileSize, food.y * tileSize, tileSize, tileSize);
 
-            // Desenhar a cobra
+            // Desenhar a cobra (quadrados verdes)
             snake.forEach((segment, index) => {
                 ctx.fillStyle = (index === 0) ? 'var(--snake-head)' : 'var(--snake-body)';
                 ctx.fillRect(segment.x * tileSize, segment.y * tileSize, tileSize, tileSize);
@@ -222,7 +218,7 @@
                 ctx.strokeRect(segment.x * tileSize, segment.y * tileSize, tileSize, tileSize);
             });
 
-            // Desenhar o bônus
+            // Desenhar o bônus (quadrado amarelo)
             if (bonus) {
                 if (Date.now() - bonusTimer > BONUS_TIMEOUT) {
                     bonus = null;
@@ -268,7 +264,6 @@
             // Comer a comida
             if (head.x === food.x && head.y === food.y) {
                 score += (Date.now() - bonusTimer < BONUS_DURATION) ? 2 : 1;
-                eatSound.play();
                 createFood();
                 increaseSpeed();
             } else {
@@ -280,7 +275,6 @@
                 score += 5;
                 bonus = null;
                 bonusTimer = Date.now();
-                eatSound.play();
             }
 
             draw();
@@ -298,7 +292,6 @@
 
         function gameOver() {
             clearInterval(gameLoop);
-            gameOverSound.play();
             ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.fillStyle = 'white';
@@ -335,7 +328,6 @@
 
         function startGame() {
             gameLoop = setInterval(update, speed);
-            // Inicia o bônus com um intervalo
             setInterval(createBonus, BONUS_INTERVAL);
         }
         
@@ -367,7 +359,6 @@
         // Inicia o jogo
         createFood();
         startGame();
-
     })();
 </script>
 
