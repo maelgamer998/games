@@ -126,8 +126,8 @@
 
 <script>
 (function snake(){
-  const eatSound = new Audio('audio/bip_snake.wav');
-  const gameOverSound = new Audio('audio/gameover_snake.wav');
+  const eatSound = new Audio('http://jogos.gamer.gd/assets/audio/bip_snake.wav');
+  const gameOverSound = new Audio('http://jogos.gamer.gd/assets/audio/gameover_snake.wav');
   const canvas = document.getElementById('snake');
   const ctx = canvas.getContext('2d');
 
@@ -172,21 +172,21 @@
     coin: new Image()
   };
   // Carregar paths
-  snakeSprites.head.direita.src = "img/head_snake_direita.png";
-  snakeSprites.head.esquerda.src = "img/head_snake_esquerda.png";
-  snakeSprites.head.cima.src = "img/head_snake_cima.png";
-  snakeSprites.head.baixo.src = "img/head_snake_baixo.png";
-  snakeSprites.body.w.src = "img/corpo_snake_w.png";
-  snakeSprites.body.h.src = "img/corpo_snake_h.png";
-  snakeSprites.tail.direita.src = "img/cauda_snake_direita.png";
-  snakeSprites.tail.esquerda.src = "img/cauda_snake_esquerda.png";
-  snakeSprites.tail.cima.src = "img/cauda_snake_cima.png";
-  snakeSprites.tail.baixo.src = "img/cauda_snake_baixo.png";
-  snakeSprites.body.curva_snake_cima_esquerda.src = "img/curva_snake_cima_esquerda.png";
-  snakeSprites.body.curva_snake_cima_direita.src = "img/curva_snake_cima_direita.png";
-  snakeSprites.body.curva_snake_baixo_esquerda.src = "img/curva_snake_baixo_esquerda.png";
-  snakeSprites.body.curva_snake_baixo_direita.src = "img/curva_snake_baixo_direita.png";
-  snakeSprites.coin.src = "img/snake/coin.png";
+  snakeSprites.head.direita.src = "http://jogos.gamer.gd/assets/img/snake/head_snake_direita.png";
+  snakeSprites.head.esquerda.src = "http://jogos.gamer.gd/assets/img/snake/head_snake_esquerda.png";
+  snakeSprites.head.cima.src = "http://jogos.gamer.gd/assets/img/snake/head_snake_cima.png";
+  snakeSprites.head.baixo.src = "http://jogos.gamer.gd/assets/img/snake/head_snake_baixo.png";
+  snakeSprites.body.w.src = "http://jogos.gamer.gd/assets/img/snake/corpo_snake_w.png";
+  snakeSprites.body.h.src = "http://jogos.gamer.gd/assets/img/snake/corpo_snake_h.png";
+  snakeSprites.tail.direita.src = "http://jogos.gamer.gd/assets/img/snake/cauda_snake_direita.png";
+  snakeSprites.tail.esquerda.src = "http://jogos.gamer.gd/assets/img/snake/cauda_snake_esquerda.png";
+  snakeSprites.tail.cima.src = "http://jogos.gamer.gd/assets/img/snake/cauda_snake_cima.png";
+  snakeSprites.tail.baixo.src = "http://jogos.gamer.gd/assets/img/snake/cauda_snake_baixo.png";
+  snakeSprites.body.curva_snake_cima_esquerda.src = "http://jogos.gamer.gd/assets/img/snake/curva_snake_cima_esquerda.png";
+  snakeSprites.body.curva_snake_cima_direita.src = "http://jogos.gamer.gd/assets/img/snake/curva_snake_cima_direita.png";
+  snakeSprites.body.curva_snake_baixo_esquerda.src = "http://jogos.gamer.gd/assets/img/snake/curva_snake_baixo_esquerda.png";
+  snakeSprites.body.curva_snake_baixo_direita.src = "http://jogos.gamer.gd/assets/img/snake/curva_snake_baixo_direita.png";
+  snakeSprites.coin.src = "http://jogos.gamer.gd/assets/img/snake/coin.png";
 
   const textures = { solid: null, gradient: null, striped: null };
   let currentTextureImg = null;
